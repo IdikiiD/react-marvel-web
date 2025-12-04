@@ -1,19 +1,21 @@
-import MarvelService from "../../server/Server";
+
 import {useState, useEffect, useRef} from "react";
 import Spinner from "../../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import './charList.scss';
-import * as PropTypes from "prop-types";
+
+
+import useMarvelService from "../../server/Server";
 
 const CharList = (props) => {
     const [charList, setCharList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+
     const [newItemLoading, setNewItemLoading] = useState(false);
-    const [offset, setOffset] = useState(210);
+    const [offset, setOffset] = useState(0);
     const [charEnded, setCharEnded] = useState(false);
 
-    const marvelService = new MarvelService();
+    const {loading, error, getAllCharacters} = useMarvelService();
+
     const itemRefs = useRef([]);  // Хук должен быть на верхнем уровне компонента
 
     useEffect(() => {
@@ -22,9 +24,9 @@ const CharList = (props) => {
 
     const onRequest = (offset) => {
         onCharListLoading()
-        marvelService.getAllCharacters(offset)
+        getAllCharacters(offset)
             .then(onCharListLoaded)
-            .catch(onError)
+
     }
 
     const onCharListLoading = () => {
@@ -38,16 +40,12 @@ const CharList = (props) => {
         }
 
         setCharList(charList => [...charList, ...newCharList]);
-        setLoading(false);
         setNewItemLoading(false);
         setOffset(offset => offset + 9);
         setCharEnded(ended);
     }
 
-    const onError = () => {
-        setError(true);
-        setLoading(false);
-    }
+
 
     const focusOnItem = (id) => {
         itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
