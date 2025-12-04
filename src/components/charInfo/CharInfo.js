@@ -1,20 +1,21 @@
 import './charInfo.scss';
-import thor from '../../resources/img/thor.jpeg';
-import {useState, useEffect, useRef} from "react";
-import MarvelService from "../../server/Server";
+
+import {useState, useEffect} from "react";
+
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../../spinner/Spinner";
 import Skeleton from '../skeleton/Skeleton';
+
+import useComicVineService from "../../server/Server";
 
 
 
 const  CharInfo =(props) => {
     const [char, setChar] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
 
 
-    const marvelService = useRef(new MarvelService());
+
+    const {loading, error, getCharacter} = useComicVineService();
 
 
     useEffect(() => {
@@ -27,12 +28,8 @@ const  CharInfo =(props) => {
         if (!charId) {
             return
         }
-        onCharLoading()
-
-        marvelService.current
-            .getCharacter(charId)
+        getCharacter(charId)
             .then(onCharLoaded)
-            .catch(onError)
 
 
     }
@@ -40,18 +37,11 @@ const  CharInfo =(props) => {
 
     const onCharLoaded = (char) => {
         setChar(char)
-        setLoading(loading => false)
     }
 
-    const onCharLoading = () => {
-        setLoading(loading => true)
-    }
 
-    const onError = () => {
 
-        setLoading(loading => false)
-        setError(error => true)
-    }
+
 
 
     const skeleton = char || loading || error ? null : <Skeleton/>
