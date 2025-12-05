@@ -7,6 +7,7 @@ import Spinner from "../../spinner/Spinner";
 import Skeleton from '../skeleton/Skeleton';
 
 import useComicVineService from "../../server/Server";
+import useMarvelService from "../../server/Server";
 
 
 
@@ -15,7 +16,7 @@ const  CharInfo =(props) => {
 
 
 
-    const {loading, error, getCharacter, clearError} = useComicVineService();
+    const {loading, error, getCharacter, clearError} = useMarvelService();
 
 
     useEffect(() => {
