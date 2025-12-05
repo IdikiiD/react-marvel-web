@@ -9,7 +9,7 @@ import useComicVineService from "../../server/Server";
 const RandomChar = () => {
     const [char, setChar] = useState(null);
 
-    const { loading, error, getCharacter } = useComicVineService();
+    const { loading, error, getCharacter,clearError } = useComicVineService();
 
     useEffect(() => {
         updateChar();
@@ -22,6 +22,7 @@ const RandomChar = () => {
     const updateChar = () => {
         const allowedIds = [1, 2, 3];
         const id = allowedIds[Math.floor(Math.random() * allowedIds.length)];
+        clearError()
 
         getCharacter(id).then(onCharLoaded);
     };
