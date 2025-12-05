@@ -15,7 +15,7 @@ const  CharInfo =(props) => {
 
 
 
-    const {loading, error, getCharacter} = useComicVineService();
+    const {loading, error, getCharacter, clearError} = useComicVineService();
 
 
     useEffect(() => {
@@ -28,6 +28,7 @@ const  CharInfo =(props) => {
         if (!charId) {
             return
         }
+        clearError()
         getCharacter(charId)
             .then(onCharLoaded)
 
