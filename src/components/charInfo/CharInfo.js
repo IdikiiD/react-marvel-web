@@ -1,6 +1,6 @@
 import './charInfo.scss';
 
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback, memo} from "react";
 
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../../spinner/Spinner";
@@ -11,7 +11,7 @@ import useMarvelService from "../../server/Server";
 
 
 
-const  CharInfo =(props) => {
+const  CharInfo = memo(({charId}) => {
     const [char, setChar] = useState(null);
 
 
@@ -21,25 +21,23 @@ const  CharInfo =(props) => {
 
     useEffect(() => {
         updateChar()
-    }, [props.charId])
+    }, [updateChar])
 
 
-    const updateChar = () => {
-        const {charId} = props
+    const updateChar = useCallback(() => {
+
         if (!charId) {
             return
         }
         clearError()
         getCharacter(charId)
-            .then(onCharLoaded)
+            .then((char=>setChar(char)))
 
 
-    }
+    },[charId,clearError,getCharacter])
 
 
-    const onCharLoaded = (char) => {
-        setChar(char)
-    }
+
 
 
 
@@ -61,7 +59,7 @@ const  CharInfo =(props) => {
     )
 
 
-}
+})
 
 
 const View =({char})=> {
