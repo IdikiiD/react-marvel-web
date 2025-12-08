@@ -2,13 +2,13 @@ import './comicsList.scss';
 import uw from '../../resources/img/UW.png';
 import xMen from '../../resources/img/x-men.png';
 import useMarvelService from "../../server/Server";
-import {useEffect, useState} from "react";
+import {memo, useCallback, useEffect, useState} from "react";
 import Skeleton from "../skeleton/Skeleton";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../../spinner/Spinner";
 import {NavLink} from "react-router-dom";
 
-const ComicsList = () => {
+const ComicsList = memo(({onCharSelected,onMouse}) => {
     const [comicsList, setComicsList] = useState([]);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [offset, setOffset] = useState(0);
@@ -20,20 +20,20 @@ const ComicsList = () => {
         onRequest(offset, true);
     }, [])
 
-    const onRequest = (offset, initial) => {
+    const onRequest = useCallback((offset, initial) => {
         initial ? setNewItemLoading(false) : setNewItemLoading(true);
         getAllComics(offset)
             .then(onComicsListLoaded)
-    }
+    },[getAllComics, onComicsListLoaded])
 
-   const onComicsListLoaded = (newComicsList) => {
+   const onComicsListLoaded =useCallback( (newComicsList) => {
         if (newComicsList.length < 8){
             setComicsEnded(true);
         }
-        setComicsList([...comicsList, ...newComicsList]);
+        setComicsList(prevList => [...prevList, ...newComicsList]);
         setNewItemLoading(false);
-        setOffset(offset + 8);
-   }
+        setOffset(prevOffset => prevOffset + 8);
+   }, []);
 
    const renderItems = (arr) => {
         const items = arr.map(item => {
@@ -76,7 +76,7 @@ const ComicsList = () => {
             </button>
         </div>
     )
-}
+})
 
 
 
