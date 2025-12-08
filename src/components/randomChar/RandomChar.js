@@ -1,12 +1,12 @@
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
-import { useEffect, useState } from "react";
+import {memo, useCallback, useEffect, useState} from "react";
 import Spinner from "../../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import useComicVineService from "../../server/Server";
 
-const RandomChar = () => {
+const RandomChar = memo(() => {
     const [char, setChar] = useState(null);
 
     const { loading, error, getCharacter,clearError } = useComicVineService();
@@ -17,9 +17,9 @@ const RandomChar = () => {
         return () => clearInterval(timerId);
     }, []);
 
-    const onCharLoaded = (char) => {
+    const onCharLoaded = useCallback((char) => {
         setChar(char);
-    };
+    },[]);
 
     const updateChar = () => {
         const allowedIds = [1, 2, 3];
@@ -55,7 +55,7 @@ const spinner = loading ? <Spinner /> : null;
             </div>
         </div>
     );
-};
+});
 const View = ({ char }) => {
     const { name, description, thumbnail, homepage, wiki } = char;
     return (
