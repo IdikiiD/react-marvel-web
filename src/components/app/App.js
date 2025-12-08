@@ -1,4 +1,4 @@
-import {lazy, Suspense, useState} from "react";
+import {lazy, Suspense, useCallback, useState} from "react";
 import AppHeader from "../appHeader/AppHeader";
 import RandomChar from "../randomChar/RandomChar";
 
@@ -16,7 +16,11 @@ const CharList = lazy(()=> import('../charList/CharList'));
 const ComicsList = lazy(()=> import('../comicsList/ComicsList'));
 const SingleComic = lazy(()=> import('../singleComic/SingleComic'));
 
-const CharListPreloading = lazy(()=> import('../charList/CharList'));
+const SingleComicPreload = ()=> import('../singleComic/SingleComic');
+
+const ComicsListPreload = () => import('../comicsList/ComicsList')
+
+
 
 
 const App = () => {
@@ -24,15 +28,15 @@ const App = () => {
     const [selectedChar, setSelectedChar] = useState(null);
 
 
-    const onCharSelected = (id) => {
+    const onCharSelected = useCallback((id) => {
         setSelectedChar(id)
-    }
+    },[])
 
 
     return (
         <BrowserRouter>
             <div className="app">
-                <AppHeader/>
+                <AppHeader onMouse={ComicsListPreload}/>
                 <main>
                     <Suspense fallback={<Spinner/>}>
                     <Routes>
@@ -43,7 +47,7 @@ const App = () => {
                                 </ErrorBoundary>
                                 <div className="char__content">
                                     <ErrorBoundary>
-                                        <CharList onCharSelected={onCharSelected}/>
+                                        <CharList onCharSelected={onCharSelected}  />
                                     </ErrorBoundary>
                                     <ErrorBoundary>
                                         <CharInfo charId={selectedChar}/>
@@ -52,7 +56,7 @@ const App = () => {
                                 </div>
                             </>
                         }/>
-                        <Route path="/comics" element={<ComicsList onCharSelected={onCharSelected}/>}/>
+                        <Route path="/comics" element={<ComicsList onCharSelected={onCharSelected} onMouse = {SingleComicPreload}/>}/>
                         <Route path="/comics/:id" element={<SingleComic />} />
                     </Routes>
                     </Suspense>
