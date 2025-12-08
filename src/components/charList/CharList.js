@@ -1,5 +1,5 @@
 
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect, useRef, useCallback, memo} from "react";
 import Spinner from "../../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import './charList.scss';
@@ -7,7 +7,7 @@ import './charList.scss';
 
 import useMarvelService from "../../server/Server";
 
-const CharList = (props) => {
+const CharList = memo(({onCharSelected}) => {
     const [charList, setCharList] = useState([]);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [offset, setOffset] = useState(0);
@@ -21,18 +21,18 @@ const CharList = (props) => {
         onRequest(offset)
     }, [])
 
-    const onRequest = (offset) => {
+    const onRequest = useCallback( (offset) => {
         onCharListLoading()
         getAllCharacters(offset)
             .then(onCharListLoaded)
 
-    }
+    },[getAllCharacters])
 
     const onCharListLoading = () => {
         setNewItemLoading(true)
-    }
+    };
 
-    const onCharListLoaded = (newCharList) => {
+    const onCharListLoaded =  (newCharList) => {
         let ended = false
         if (newCharList.length < 9) {
             ended = true
@@ -46,7 +46,7 @@ const CharList = (props) => {
 
 
 
-    const focusOnItem = (id) => {
+    const focusOnItem =  (id) => {
         itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
         itemRefs.current[id].classList.add('char__item_selected');
         itemRefs.current[id].focus();
@@ -66,12 +66,12 @@ const CharList = (props) => {
                     ref={el => itemRefs.current[i] = el}
                     key={item.id}
                     onClick={() => {
-                        props.onCharSelected(item.id);
+                        onCharSelected(item.id);
                         focusOnItem(i);
                     }}
                     onKeyPress={(e) => {
                         if (e.key === ' ' || e.key === "Enter") {
-                            props.onCharSelected(item.id);
+                            onCharSelected(item.id);
                             focusOnItem(i);
                         }
                     }}>
@@ -107,5 +107,5 @@ const CharList = (props) => {
             </button>
         </div>
     )
-}
+})
 export default CharList;
