@@ -18,6 +18,12 @@ const useMarvelService = () => {
         if (!char) throw new Error("Character not found");
         return _transformCharacter(char);
     };
+    const getCharacterByName =  async (name) =>{
+        const data = await request(_jsonUrl);
+        const chars = data.filter(c => c.name.toLowerCase().includes(name.toLowerCase()));
+        if (chars.length === 0) return [];
+        return chars.map(_transformCharacter);
+    }
     const getAllComics = async (offset = 0) => {
         const res = await request(_jsonUrl);
         return res.map(_transformComics);
@@ -62,7 +68,7 @@ const useMarvelService = () => {
         };
     };
 
-    return { loading, error, clearError, getAllCharacters, getCharacter, getAllComics, getComic };
+    return { loading, error, clearError, getAllCharacters, getCharacter, getAllComics, getComic, getCharacterByName };
 };
 
 export default useMarvelService;
