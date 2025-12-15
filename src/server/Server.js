@@ -48,26 +48,25 @@ const useMarvelService = () => {
             comics: char.comics,
         };
     };
-    const _transformComics = (comics) => {
-        console.log('Данные комикса:', comics);  // ← Временно для отладки
+    const _transformComics = (comic) => {
+        // comic — это объект героя с полем comics (массив)
+        const comicNames = comic.comics?.map(c => c.name).join(', ') || comic.name;
+        const comicPrice = comic.comics?.[0]?.price ? `${comic.comics[0].price}$` : "not available";
+
+        const thumbnail = typeof comic.thumbnail === 'string'
+            ? comic.thumbnail
+            : (comic.thumbnail?.path ? `${comic.thumbnail.path}.${comic.thumbnail.extension}` : "placeholder.jpg");
 
         return {
-            id: comics.id,
-            title: comics.title || comics.name || "Unknown Title",
-            description: comics.description || "There is no description",
+            id: comic.id,
+            name: comicNames,
+            description: comic.description || "There is no description",
             pageCount: "No information",
-            thumbnail: typeof comics.thumbnail === 'string'
-                ? comics.thumbnail
-                : (comics.thumbnail?. path
-                    ? `${comics.thumbnail.path}.${comics.thumbnail.extension}`
-                    : "placeholder.jpg"),
+            thumbnail,
             language: "en-us",
-            price: comics.price
-                ? `${comics.price}$`
-                : "not available",
+            price: comicPrice,
         };
     };
-
     return { loading, error, clearError, getAllCharacters, getCharacter, getAllComics, getComic, getCharacterByName };
 };
 
