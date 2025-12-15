@@ -28,19 +28,7 @@ const SingleComic = () => {
     }
 
     const renderItems = (comictData) => {
-        return (
-            <div className="single-comic">
-                <img src={xMen} alt="x-men" className="single-comic__img"/>
-                <div className="single-comic__info">
-                    <h2 className="single-comic__name">{comictData.name}</h2>
-                    <p className="single-comic__descr">{comictData.description}</p>
-                    <p className="single-comic__descr">{comictData.pageCount}</p>
-                    <p className="single-comic__descr">{comictData.language}</p>
-                    <div className="single-comic__price">{comictData.price}</div>
-                </div>
-                <NavLink end to={"/comics"}  className="single-comic__back">Back to all</NavLink>
-            </div>
-        )
+        const {name, description, pageCount, language, price} = comictData
     }
     const errorMessage = error ? <ErrorMessage/> : null
     const spinner = loading && !newItemLoading ? <Spinner/> : null
