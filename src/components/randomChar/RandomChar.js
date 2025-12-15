@@ -11,11 +11,7 @@ const RandomChar = memo(() => {
 
     const { loading, error, getCharacter,clearError } = useComicVineService();
 
-    useEffect(() => {
-        updateChar();
-        const timerId = setInterval(updateChar, 60000);
-        return () => clearInterval(timerId);
-    }, []);
+
 
     const onCharLoaded = useCallback((char) => {
         setChar(char);
@@ -29,6 +25,11 @@ const RandomChar = memo(() => {
 
         getCharacter(id).then(onCharLoaded);
     };
+    useEffect(() => {
+        updateChar();
+        const timerId = setInterval(updateChar, 60000);
+        return () => clearInterval(timerId);
+    }, []);
 
 const spinner = loading ? <Spinner /> : null;
     const errorMessage = error ? <ErrorMessage /> : null;
