@@ -64,7 +64,7 @@ const App = () => {
                             </>
                         }/>
                         <Route path="/comics" element={<ComicsList onCharSelected={onCharSelected} onMouse = {SingleComicPreload}/>}/>
-                        <Route path="/comics/:id" element={<SingleComic />} />
+                        <Route path="/comics/:id" element={<SinglePage Component={SingleCharacterLayout} dataType={'comic'}/>} />
                         <Route exact path={"/characters/:id"} element ={<SinglePage Component={SingleCharacterLayout} dataType={'character'}/>}/>
 
 
