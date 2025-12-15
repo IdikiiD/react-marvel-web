@@ -13,6 +13,7 @@ import CharSearchForm from "../charSearchForm/CharSearchForm";
 import SinglePage from "../pages/SinglePage";
 import singleCharacterLayout from "../pages/SingleCharacterLayout/SingleCharacterLayout";
 import SingleCharacterLayout from "../pages/SingleCharacterLayout/SingleCharacterLayout";
+import MainPage from "../pages/MainPage";
 
 
 
@@ -44,25 +45,7 @@ const App = () => {
                 <main>
                     <Suspense fallback={<Spinner/>}>
                     <Routes>
-                        <Route path="/" element={
-                            <>
-                                <ErrorBoundary>
-                                    <RandomChar/>
-                                </ErrorBoundary>
-                                <div className="char__content">
-                                    <ErrorBoundary>
-                                        <CharList onCharSelected={onCharSelected}  />
-                                    </ErrorBoundary>
-                                    <ErrorBoundary>
-                                        <CharInfo charId={selectedChar}/>
-                                    </ErrorBoundary>
-                                    <ErrorBoundary>
-                                        <CharSearchForm/>
-                                    </ErrorBoundary>
-                                    <img className="bg-decoration" src={decoration} alt="vision"/>
-                                </div>
-                            </>
-                        }/>
+                        <Route path="/" element={<MainPage/>}/>
                         <Route path="/comics" element={<ComicsList onCharSelected={onCharSelected} onMouse = {SingleComicPreload}/>}/>
                         <Route path="/comics/:id" element={<SinglePage Component={SingleCharacterLayout} dataType={'comic'}/>} />
                         <Route exact path={"/characters/:id"} element ={<SinglePage Component={SingleCharacterLayout} dataType={'character'}/>}/>
