@@ -9,6 +9,10 @@ import decoration from '../../resources/img/vision.png';
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Spinner from "../../spinner/Spinner";
+import CharSearchForm from "../charSearchForm/CharSearchForm";
+import SinglePage from "../pages/SinglePage";
+import singleCharacterLayout from "../pages/SingleCharacterLayout/SingleCharacterLayout";
+import SingleCharacterLayout from "../pages/SingleCharacterLayout/SingleCharacterLayout";
 
 
 
@@ -52,12 +56,18 @@ const App = () => {
                                     <ErrorBoundary>
                                         <CharInfo charId={selectedChar}/>
                                     </ErrorBoundary>
+                                    <ErrorBoundary>
+                                        <CharSearchForm/>
+                                    </ErrorBoundary>
                                     <img className="bg-decoration" src={decoration} alt="vision"/>
                                 </div>
                             </>
                         }/>
                         <Route path="/comics" element={<ComicsList onCharSelected={onCharSelected} onMouse = {SingleComicPreload}/>}/>
                         <Route path="/comics/:id" element={<SingleComic />} />
+                        <Route exact path={"/characters/:id"} element ={<SinglePage Component={SingleCharacterLayout} dataType={'character'}/>}/>
+
+
                     </Routes>
                     </Suspense>
                 </main>
