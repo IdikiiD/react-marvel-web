@@ -14,7 +14,7 @@ const useMarvelService = () => {
 
     const getCharacter = async (id) => {
         const data = await request(_jsonUrl);
-        const char = data.find(c => c.id === id);
+        const char = data.find(c => c.id === +id);
         if (!char) throw new Error("Character not found");
         return _transformCharacter(char);
     };
