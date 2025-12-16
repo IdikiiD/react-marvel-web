@@ -5,11 +5,12 @@ import useMarvelService from "../../server/Server";
 import Spinner from "../../spinner/Spinner";
 import clearError from "../../server/Server";
 import AppBanner from "../appBanner/AppBanner";
+import SetState from "../../utils/setState";
 const SinglePage = ({Component , dataType}) => {
     const {id} = useParams()
     const [data, setData] = useState(null);
 
-    const {loading, error, getCharacter, getComic} = useMarvelService();
+    const {process, getCharacter, getComic} = useMarvelService();
 
     useEffect(() => {
         onRequest()
@@ -28,19 +29,16 @@ const SinglePage = ({Component , dataType}) => {
         }
     }
 
+
+
     const onDataLoaded = (data) => {
         setData(data);
     }
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !data) ? <Component data={data}/> : null;
 
     return (
         <>
             <AppBanner/>
-            {errorMessage}
-            {spinner}
-            {content}
+            {SetState(process, ()=><Component data={data}/>, data)}
         </>
 
     )
