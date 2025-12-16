@@ -7,6 +7,7 @@ import {memo, useCallback, useEffect, useState} from "react";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../../spinner/Spinner";
 import {NavLink} from "react-router-dom";
+import SetState from "../../utils/setState";
 
 const ComicsList = memo(({onCharSelected,onMouse}) => {
     const [comicsList, setComicsList] = useState([]);
@@ -14,7 +15,7 @@ const ComicsList = memo(({onCharSelected,onMouse}) => {
     const [offset, setOffset] = useState(0);
     const [comicsEnded, setComicsEnded] = useState(false);
 
-    const {loading, error, getAllComics} = useMarvelService();
+    const {setProcess,process, getAllComics} = useMarvelService();
 
     useEffect(() => {
         onRequest(offset, true);
@@ -32,7 +33,7 @@ const ComicsList = memo(({onCharSelected,onMouse}) => {
     const onRequest = useCallback((offset, initial) => {
         initial ? setNewItemLoading(false) : setNewItemLoading(true);
         getAllComics(offset)
-            .then(onComicsListLoaded)
+            .then(onComicsListLoaded).then(()=> setProcess('confirmed'))
     },[getAllComics, onComicsListLoaded])
 
 
@@ -58,16 +59,11 @@ const ComicsList = memo(({onCharSelected,onMouse}) => {
 
    }
 
-    const errorMessage = error ? <ErrorMessage/> : null
-    const spinner = loading && !newItemLoading ? <Spinner/> : null
 
-    const content = !(loading || error || !comicsList) ? renderItems(comicsList) : null;
 
     return (
         <div className="char__list">
-            {errorMessage}
-            {spinner}
-            {content}
+            {SetState(process, ()=>renderItems(comicsList), comicsList)}
             <button
                 className="button button__main button__long"
                 disabled={newItemLoading}
