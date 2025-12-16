@@ -1,7 +1,7 @@
 import { useHttp } from "../hooks/http.hook";
 
 const useMarvelService = () => {
-    const { loading, request, error, clearError } = useHttp();
+    const { request, process, clearError, setProcess } = useHttp();
 
     const _jsonUrl = '/heroes.json'; // путь к JSON в public
 
@@ -67,7 +67,7 @@ const useMarvelService = () => {
             price: comicPrice,
         };
     };
-    return { loading, error, clearError, getAllCharacters, getCharacter, getAllComics, getComic, getCharacterByName };
+    return {process, setProcess, clearError, getAllCharacters, getCharacter, getAllComics, getComic, getCharacterByName };
 };
 
 export default useMarvelService;
