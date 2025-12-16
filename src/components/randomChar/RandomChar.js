@@ -5,11 +5,12 @@ import {memo, useCallback, useEffect, useState} from "react";
 import Spinner from "../../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import useComicVineService from "../../server/Server";
+import setState from "../../utils/setState";
 
 const RandomChar = memo(() => {
     const [char, setChar] = useState(null);
 
-    const { loading, error, getCharacter,clearError } = useComicVineService();
+    const { setProcess,process, getCharacter,clearError } = useComicVineService();
 
 
 
@@ -23,7 +24,7 @@ const RandomChar = memo(() => {
         setChar(null);
         clearError()
 
-        getCharacter(id).then(onCharLoaded);
+        getCharacter(id).then(onCharLoaded).then(()=> setProcess('confirmed'))
     };
     useEffect(() => {
         updateChar();
@@ -31,15 +32,11 @@ const RandomChar = memo(() => {
         return () => clearInterval(timerId);
     }, []);
 
-const spinner = loading ? <Spinner /> : null;
-    const errorMessage = error ? <ErrorMessage /> : null;
-    const content = !(loading || error || !char) ? <View char={char} /> : null;
+
 
     return (
         <div className="randomchar">
-            {spinner}
-            {content}
-            {errorMessage}
+            {setState(process, ()=><View char={char} />, char)}
 
             <div className="randomchar__static">
                 <p className="randomchar__title">
