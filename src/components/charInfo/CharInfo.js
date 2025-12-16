@@ -15,7 +15,7 @@ const CharInfo = (props) => {
 
     const [char, setChar] = useState(null);
 
-    const {getCharacter, process, clearError} = useMarvelService();
+    const {setProcess,getCharacter, process, clearError} = useMarvelService();
 
     useEffect(() => {
         updateChar()
@@ -29,7 +29,7 @@ const CharInfo = (props) => {
 
         clearError();
         getCharacter(charId)
-            .then(onCharLoaded)
+            .then(onCharLoaded).then(()=> setProcess('confirmed'))
     }
 
     const onCharLoaded = (char) => {
