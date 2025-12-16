@@ -6,6 +6,7 @@ import './charList.scss';
 
 
 import useMarvelService from "../../server/Server";
+import SetState from "../../utils/setState";
 
 const CharList = memo(({onCharSelected}) => {
     const [charList, setCharList] = useState([]);
@@ -13,7 +14,7 @@ const CharList = memo(({onCharSelected}) => {
     const [offset, setOffset] = useState(0);
     const [charEnded, setCharEnded] = useState(false);
 
-    const {loading, error, getAllCharacters} = useMarvelService();
+    const {setProcess,process , getAllCharacters} = useMarvelService();
 
     const itemRefs = useRef([]);  // Хук должен быть на верхнем уровне компонента
 
@@ -24,7 +25,7 @@ const CharList = memo(({onCharSelected}) => {
     const onRequest = useCallback( (offset) => {
         onCharListLoading()
         getAllCharacters(offset)
-            .then(onCharListLoaded)
+            .then(onCharListLoaded).then(()=> setProcess('confirmed'))
 
     },[getAllCharacters])
 
@@ -88,16 +89,13 @@ const CharList = memo(({onCharSelected}) => {
         )
     }
 
+
     const items = renderItems(charList);
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error) ? items : null;
+
 
     return (
         <div className="char__list">
-            {errorMessage}
-            {spinner}
-            {content}
+            {SetState(process, () => renderItems(charList), charList)}
             <button
                 className="button button__main button__long"
                 disabled={newItemLoading}
