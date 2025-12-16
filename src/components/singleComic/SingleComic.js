@@ -5,13 +5,14 @@ import useMarvelService from "../../server/Server";
 import {NavLink, useParams} from "react-router-dom";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../../spinner/Spinner";
+import setState from "../../utils/setState";
 
 const SingleComic = () => {
 
     const [comictData, setComictData] = useState(null);
     const [newItemLoading, setNewItemLoading] = useState(false);
 
-    const {loading, error, getComic} = useMarvelService();
+    const {process,setProcess, getComic} = useMarvelService();
     const {id} = useParams();
 
     useEffect(() => {
@@ -20,7 +21,7 @@ const SingleComic = () => {
 
     const onRequest = (id) => {
         getComic(id)
-            .then(onComictLoaded)
+            .then(onComictLoaded).then(()=> setProcess('confirmed'));
 
     }
     const onComictLoaded = (comictData) => {
@@ -30,16 +31,11 @@ const SingleComic = () => {
     const renderItems = (comictData) => {
         const {name, description, pageCount, language, price} = comictData
     }
-    const errorMessage = error ? <ErrorMessage/> : null
-    const spinner = loading && !newItemLoading ? <Spinner/> : null
 
-    const content = !(loading || error || !comictData) ? renderItems(comictData) : null;
 
     return (
         <>
-            {errorMessage}
-            {spinner}
-            {content}
+            {setState(process, () => renderItems(comictData), comictData)}
         </>
     )
 }
